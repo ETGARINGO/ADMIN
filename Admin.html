@@ -27,7 +27,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* BALANCED RECONNAISSANCE VIDEO MATRIX */
+        /* PERMANENT BACKGROUND VIDEO PIPELINE */
         .video-matrix-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1; overflow: hidden; background: var(--bg-deep-space);
@@ -40,7 +40,7 @@
             will-change: transform, opacity;
         }
 
-        /* HIGH-CONTRAST VECTOR TACTICAL MAP CONTAINER */
+        /* PERMANENT GEOSPATIAL RADAR LAYER */
         #nav-map {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2; mix-blend-mode: screen;
@@ -56,12 +56,12 @@
             filter: brightness(0.35) contrast(1.6) saturate(0.1) hue-rotate(180deg) invert(0.05) !important;
         }
 
-        /* TACTICAL HEADS-UP DISPLAY OVERLAY */
+        /* HEADS-UP DISPLAY OVERLAY DEPLOYMENT FRAME */
         #hud {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; pointer-events: none;
+            z-index: 10;
             background: radial-gradient(circle, rgba(1, 6, 15, 0.1) 20%, rgba(1, 6, 15, 0.96) 100%);
-            transition: opacity 0.35s var(--kinetic-snap);
+            transition: opacity 0.4s var(--kinetic-snap), visibility 0.4s;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -70,6 +70,7 @@
             padding: 40px 60px; position: relative;
             transform: scale(0.8); opacity: 0;
             animation: tacticalTargetLock 0.5s var(--kinetic-snap) forwards;
+            pointer-events: auto;
         }
 
         .hud-frame-box::before, .hud-frame-box::after {
@@ -107,70 +108,102 @@
             text-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
         }
 
-        /* FLOATING TACTICAL BUTTON OVERLAY */
+        /* HUD ACTION PROCEED BUTTON */
+        .tactical-proceed-btn {
+            background: rgba(1, 6, 15, 0.8);
+            border: 2px solid var(--tactical-cyan);
+            color: #ffffff; font-family: monospace; font-size: 0.8rem; font-weight: 900;
+            letter-spacing: 3px; padding: 14px 32px; border-radius: 4px;
+            margin-top: 30px; cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 240, 245, 0.25);
+            transition: all 0.25s var(--kinetic-snap);
+            text-transform: uppercase;
+        }
+        .tactical-proceed-btn:hover {
+            background: var(--tactical-cyan); color: var(--bg-deep-space);
+            box-shadow: 0 0 25px var(--tactical-cyan); transform: scale(1.03);
+        }
+
+        /* PERSISTENT FLOATING SIDEBAR TRIGGER */
         .tactical-floating-btn {
             position: fixed; bottom: 30px; right: 30px;
             z-index: 50; pointer-events: auto;
-            background: rgba(1, 6, 15, 0.85);
+            background: rgba(1, 6, 15, 0.9);
             border: 2px solid var(--tactical-cyan);
             color: #ffffff; font-family: monospace; font-size: 0.75rem; font-weight: 900;
-            letter-spacing: 2px; padding: 14px 24px; border-radius: 4px;
+            letter-spacing: 2px; padding: 14px 22px; border-radius: 4px;
             cursor: pointer; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
             transition: all 0.25s var(--kinetic-snap);
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 12px;
             text-transform: uppercase;
         }
         .tactical-floating-btn:hover {
             background: var(--tactical-cyan); color: var(--bg-deep-space);
             box-shadow: 0 0 25px var(--tactical-cyan); transform: translateY(-3px);
         }
-        .tactical-floating-btn::before {
-            content: ''; width: 8px; height: 8px; background: var(--matrix-green);
-            border-radius: 50%; box-shadow: 0 0 8px var(--matrix-green);
-            animation: blip 1s infinite alternate;
-        }
+        .tactical-floating-btn svg { fill: currentColor; transition: transform 0.3s; }
+        .tactical-floating-btn:hover svg { transform: rotate(90deg); }
 
-        /* SYSTEM MODAL FORM ELEMENT STYLING */
-        .modal-subsystem-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 200; background: rgba(1, 6, 15, 0.85);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: all 0.3s var(--kinetic-snap);
+        /* FLEXIBLE TACTICAL SIDEBAR WITH TRANSLATION ENGINE */
+        .tactical-sidebar-panel {
+            position: fixed; top: 0; right: 0;
+            width: 450px; max-width: 100%; height: 100%;
+            z-index: 300; background: rgba(1, 6, 15, 0.96);
+            border-left: 2px solid var(--tactical-cyan);
+            box-shadow: -10px 0 30px rgba(1, 6, 15, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            transform: translate3d(100%, 0, 0); 
+            transition: transform 0.4s var(--kinetic-snap), width 0.3s var(--kinetic-snap);
+            will-change: transform, width;
         }
-        .modal-subsystem-overlay.active { opacity: 1; visibility: visible; }
+        .tactical-sidebar-panel.panel-active { transform: translate3d(0, 0, 0); }
+        
+        /* DESKTOP MATRIX MODE SWITCHED BY JS */
+        .tactical-sidebar-panel.desktop-mode { width: 1000px; }
 
-        .modal-subsystem-container {
-            width: 90%; max-width: 750px; height: 80%;
-            background: var(--bg-deep-space); border: 2px solid var(--tactical-cyan);
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.25); border-radius: 4px;
-            position: relative; display: flex; flex-direction: column;
-            transform: scale(0.9); transition: transform 0.3s var(--kinetic-snap);
-        }
-        .modal-subsystem-overlay.active .modal-subsystem-container { transform: scale(1); }
-
-        .modal-subsystem-header {
-            padding: 12px 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        .sidebar-panel-header {
+            padding: 15px 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.2);
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0, 240, 255, 0.03);
+            background: rgba(0, 240, 255, 0.03); gap: 15px;
         }
-        .modal-subsystem-title {
-            color: var(--tactical-cyan); font-family: monospace; font-size: 0.8rem;
+        .sidebar-panel-title {
+            color: var(--tactical-cyan); font-family: monospace; font-size: 0.85rem;
             font-weight: 900; letter-spacing: 2px; margin: 0; text-transform: uppercase;
+            display: flex; align-items: center; gap: 8px; white-space: nowrap;
         }
-        .modal-subsystem-close {
+        
+        /* CONTROLS AREA WRAPPER */
+        .sidebar-header-controls {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* TACTICAL TOGGLE BUTTON GROUP */
+        .layout-toggle-btn {
+            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.4);
+            color: rgba(255, 255, 255, 0.7); font-family: monospace; font-size: 0.65rem;
+            font-weight: 700; padding: 5px 10px; cursor: pointer; border-radius: 2px;
+            transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .layout-toggle-btn.btn-selected {
+            background: var(--tactical-cyan); color: var(--bg-deep-space);
+            border-color: var(--tactical-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            font-weight: 900;
+        }
+
+        .sidebar-panel-close {
             background: transparent; border: 1px solid var(--alert-crimson);
             color: var(--alert-crimson); font-family: monospace; font-size: 0.7rem;
-            font-weight: 900; padding: 4px 10px; cursor: pointer; border-radius: 2px;
+            font-weight: 900; padding: 5px 12px; cursor: pointer; border-radius: 2px;
             transition: all 0.2s; text-transform: uppercase;
         }
-        .modal-subsystem-close:hover {
+        .sidebar-panel-close:hover {
             background: var(--alert-crimson); color: #ffffff; box-shadow: 0 0 10px var(--alert-crimson);
         }
-        .modal-subsystem-body { flex: 1; width: 100%; height: 100%; background: #ffffff; }
-        .modal-subsystem-body iframe { width: 100%; height: 100%; border: none; }
+        .sidebar-panel-body { flex: 1; width: 100%; background: #ffffff; overflow: hidden; }
+        .sidebar-panel-body iframe { width: 100%; height: 100%; border: none; }
 
-        /* LUMINESCENT NODE GRAPHICS MARKERS */
+        /* RE-TUNED VECTOR MARKER STYLES */
         .tactical-label {
             background: rgba(1, 6, 15, 0.95) !important; border: 1px solid var(--tactical-cyan) !important;
             color: #ffffff !important; font-weight: 700 !important; font-family: monospace !important;
@@ -182,24 +215,17 @@
             box-shadow: 0 0 20px rgba(255, 0, 85, 0.5) !important;
         }
 
-        @keyframes blip { 0% { opacity: 0.4; } 100% { opacity: 1; filter: brightness(1.3); } }
         @keyframes pulseMatrix { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
         .pulse-ring { border: 2px solid var(--matrix-green); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 4px var(--matrix-green)); }
         .hq-pulse-ring { border: 2px solid var(--alert-crimson); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 6px var(--alert-crimson)); }
-        
-        @keyframes highSpeedSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-ring {
-            border: 3px solid rgba(0, 240, 255, 0.05); border-top: 3px solid var(--tactical-cyan); 
-            border-radius: 50%; width: 38px; height: 38px; 
-            animation: highSpeedSpin 0.45s linear infinite; margin-top: 25px;
-            filter: drop-shadow(0 0 6px var(--tactical-cyan));
-        }
-
         @keyframes tacticalTargetLock { to { transform: scale(1); opacity: 1; } }
 
+        /* CORE ADMIN FRAME */
         #secure-frame {
-            position: absolute; width: 100%; height: 100%; border: none; z-index: 100; 
-            opacity: 0; visibility: hidden; transition: opacity 0.4s var(--kinetic-snap);
+            position: absolute; width: 100%; height: 100%; border: none; 
+            z-index: 5; opacity: 0; visibility: hidden; 
+            transition: opacity 0.4s var(--kinetic-snap);
+            background: transparent;
         }
     </style>
 </head>
@@ -213,17 +239,35 @@
 
     <div id="nav-map"></div>
 
-    <button class="tactical-floating-btn" onclick="toggleSubsystemModal(true)">Launch Record Access</button>
+    <iframe id="secure-frame" 
+            src="https://script.google.com/macros/s/AKfycbyyU9KPevRWBDA3af7aKZ7ZFgo7Vp2YxmNFZvcSs8cOpgKLQPkP7d6YwmoxAy-akIkpUA/exec?p=Admin" 
+            allow="geolocation; camera; microphone; fullscreen; autoplay; display-capture;">
+    </iframe>
 
-    <div class="modal-subsystem-overlay" id="formModal">
-        <div class="modal-subsystem-container">
-            <div class="modal-subsystem-header">
-                <h3 class="modal-subsystem-title">// Secure Subsystem Intake Access</h3>
-                <button class="modal-subsystem-close" onclick="toggleSubsystemModal(false)">Terminate</button>
+    <button class="tactical-floating-btn" onclick="toggleTacticalSidebar(true)">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        Data Intake
+    </button>
+
+    <div class="tactical-sidebar-panel" id="sidebarPanel">
+        <div class="sidebar-panel-header">
+            <h3 class="sidebar-panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" style="fill: var(--tactical-cyan);">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                Terminal
+            </h3>
+            
+            <div class="sidebar-header-controls">
+                <button id="btnSideView" class="layout-toggle-btn btn-selected" onclick="adjustFormLayout('side')">Side View</button>
+                <button id="btnDesktopView" class="layout-toggle-btn" onclick="adjustFormLayout('desktop')">Desktop Look</button>
+                <button class="sidebar-panel-close" onclick="toggleTacticalSidebar(false)">Close</button>
             </div>
-            <div class="modal-subsystem-body">
-                <iframe src="https://script.google.com/macros/s/AKfycbyyU9KPevRWBDA3af7aKZ7ZFgo7Vp2YxmNFZvcSs8cOpgKLQPkP7d6YwmoxAy-akIkpUA/exec"></iframe>
-            </div>
+        </div>
+        <div class="sidebar-panel-body">
+            <iframe src="https://script.google.com/macros/s/AKfycbyyU9KPevRWBDA3af7aKZ7ZFgo7Vp2YxmNFZvcSs8cOpgKLQPkP7d6YwmoxAy-akIkpUA/exec"></iframe>
         </div>
     </div>
 
@@ -233,17 +277,11 @@
             <div class="header-container">
                 <h1>POLICE REGIONAL OFFICE 9</h1>
                 <p class="system-title">BODY MASS INDEX MONITORING SYSTEM</p>
-                <p class="system-status">// SYSTEM CONFIGURED: DATA TERMINALS CONNECTED...</p>
+                <p class="system-status">// SYSTEM CONFIGURED: AWAITING OPERATOR DISPATCH...</p>
             </div>
-            <div class="loader-ring"></div>
+            <button class="tactical-proceed-btn" onclick="triggerOverdriveLaunch()">Proceed to System Matrix</button>
         </div>
     </div>
-
-    <iframe id="secure-frame" 
-            src="https://script.google.com/macros/s/AKfycbyyU9KPevRWBDA3af7aKZ7ZFgo7Vp2YxmNFZvcSs8cOpgKLQPkP7d6YwmoxAy-akIkpUA/exec?p=Admin" 
-            allow="geolocation; camera; microphone; fullscreen; autoplay; display-capture;"
-            onload="overdriveLaunch()">
-    </iframe>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -281,45 +319,54 @@
             L.circleMarker(node.p, { radius: node.isHQ ? 24 : 16, color: markerColor, weight: 1.5, fillOpacity: 0, className: pulseClassName }).addTo(map);
         });
 
-        // MAXIMUM SPEED KINETIC CAMERA SNAP
         setTimeout(() => {
             map.flyTo([6.9576, 122.1444], 14, { duration: 0.42, easeLinearity: 0.02 });
         }, 100);
 
-        function overdriveLaunch() {
+        function triggerOverdriveLaunch() {
             const frame = document.getElementById('secure-frame');
             const hud = document.getElementById('hud');
-            const videoContainer = document.querySelector('.video-matrix-bg');
-
-            map.flyTo([7.4000, 122.3000], 8, { duration: 0.38, easeLinearity: 0.02 });
-
+            map.flyTo([7.4000, 122.3000], 8, { duration: 0.45, easeLinearity: 0.05 });
             setTimeout(() => {
                 frame.style.visibility = "visible";
-                frame.style.opacity = "1";
+                frame.style.opacity = "0.92"; 
                 hud.style.opacity = "0";
-                
-                // Note: Background map/video cleaning calls skipped here to keep floating action interface running natively
-            }, 320);
+                hud.style.visibility = "hidden";
+            }, 350);
         }
 
-        // Subsystem Form Interaction Engine Toggle Matrix
-        function toggleSubsystemModal(show) {
-            const modal = document.getElementById('formModal');
+        function toggleTacticalSidebar(show) {
+            const panel = document.getElementById('sidebarPanel');
             if (show) {
-                modal.classList.add('active');
+                panel.classList.add('panel-active');
             } else {
-                modal.classList.remove('active');
+                panel.classList.remove('panel-active');
             }
         }
 
-        // Global Production Protection Matrix
+        // MATRIX LAYOUT COUPLING SWITCH LOGIC
+        function adjustFormLayout(mode) {
+            const panel = document.getElementById('sidebarPanel');
+            const btnSide = document.getElementById('btnSideView');
+            const btnDesktop = document.getElementById('btnDesktopView');
+
+            if (mode === 'desktop') {
+                panel.classList.add('desktop-mode');
+                btnDesktop.classList.add('btn-selected');
+                btnSide.classList.remove('btn-selected');
+            } else {
+                panel.classList.remove('desktop-mode');
+                btnSide.classList.add('btn-selected');
+                btnDesktop.classList.remove('btn-selected');
+            }
+        }
+
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) {
                 return false;
             }
         };
 
-        // System Heartbeat Keep-Alive Loop
         let idleTime = 0;
         const resetIdle = () => idleTime = 0;
         ['mousemove', 'keypress', 'touchstart'].forEach(evt => window.addEventListener(evt, resetIdle));
