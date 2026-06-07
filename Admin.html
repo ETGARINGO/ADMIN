@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="LOGO.png">
+    <link rel="apple-touch-icon" href="LOGO.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PRO9 | BMI MONITORING INFORMATION SYSTEM</title>
+    
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://server.arcgisonline.com">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            --tactical-blue: #00d4ff;
+            --defense-green: #00ff66;
+            --alert-amber: #ffb700;
+            --bg-black: #010b1a;
+            --snap-curve: cubic-bezier(0.08, 0.82, 0.17, 1);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100%; width: 100%; 
+            overflow: hidden; background-color: var(--bg-black); 
+            position: fixed; font-family: 'Segoe UI', -apple-system, sans-serif;
+        }
+
+        /* HYPER-SPEED ZOOM CONTAINER */
+        #nav-map {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; filter: brightness(0.4) contrast(1.5) saturate(0.5) hue-rotate(185deg);
+            background: var(--bg-black);
+            will-change: transform, opacity;
+        }
+
+        /* HUD OVERLAY - CONTROL SYSTEM */
+        #hud {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none;
+            background: radial-gradient(circle, transparent 10%, rgba(1, 11, 26, 0.97) 100%);
+            transition: opacity 0.3s var(--snap-curve);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .hud-frame-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px 45px; position: relative;
+            transform: scale(0.9);
+            animation: snapIn 0.4s var(--snap-curve) forwards;
+        }
+
+        /* Dynamic Border Brackets */
+        .hud-frame-box::before, .hud-frame-box::after {
+            content: ''; position: absolute; width: 30px; height: 30px;
+            border-color: var(--tactical-blue); border-style: solid;
+        }
+        .hud-frame-box::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
+        .hud-frame-box::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+
+        .entrance-logo {
+            width: 110px; height: auto;
+            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6));
+        }
+
+        .header-container {
+            text-align: center; color: #ffffff; text-transform: uppercase;
+            margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+
+        .header-container h1 { 
+            margin: 0; font-size: 1.4rem; letter-spacing: 5px; font-weight: 900; 
+            text-shadow: 0 0 12px var(--tactical-blue);
+        }
+
+        .header-container .system-title {
+            font-size: 0.8rem; letter-spacing: 3px; color: var(--tactical-blue); font-weight: 700; margin: 0;
+        }
+
+        .header-container .system-status {
+            font-size: 0.65rem; letter-spacing: 2px; color: var(--defense-green); font-family: monospace; margin: 8px 0 0 0;
+        }
+
+        /* TACTICAL MAP NODES */
+        .tactical-label {
+            background: rgba(1, 11, 26, 0.95) !important; border: 1px solid var(--tactical-blue) !important;
+            color: #ffffff !important; font-weight: 700 !important; font-family: monospace !important;
+            font-size: 10px !important; padding: 2px 6px !important; border-radius: 3px !important;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3); text-transform: uppercase;
+        }
+
+        .hq-label {
+            border-color: var(--alert-amber) !important; color: var(--alert-amber) !important; font-weight: 900 !important;
+        }
+
+        @keyframes nodePulse { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
+        .pulse-ring { border: 2px solid var(--defense-green); border-radius: 50%; animation: nodePulse 1.4s infinite linear; }
+        .hq-pulse-ring { border: 2px solid var(--alert-amber); border-radius: 50%; animation: nodePulse 1.4s infinite linear; }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-ring {
+            border: 3px solid rgba(255,255,255,0.03); border-top: 3px solid var(--tactical-blue); 
+            border-radius: 50%; width: 34px; height: 34px; 
+            animation: spin 0.6s linear infinite; margin-top: 20px;
+        }
+
+        @keyframes snapIn { to { transform: scale(1); } }
+
+        #secure-frame {
+            position: absolute; width: 100%; height: 100%; border: none; z-index: 100; 
+            opacity: 0; visibility: hidden; transition: opacity 0.3s var(--snap-curve);
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="nav-map"></div>
+
+    <div id="hud">
+        <div class="hud-frame-box">
+            <img src="pro9 logo.png" alt="PRO9 Logo" class="entrance-logo" width="110" height="110">
+            <div class="header-container">
+                <h1>POLICE REGIONAL OFFICE 9</h1>
+                <p class="system-title">BODY MASS INDEX MONITORING SYSTEM</p>
+                <p class="system-status">// SYSTEM LOCK: HQ INITIALIZATION FAST-FORWARD...</p>
+            </div>
+            <div class="loader-ring"></div>
+        </div>
+    </div>
+
+    <iframe id="secure-frame" 
+            src="https://script.google.com/macros/s/AKfycbyDAf70EcnIuHAgnlZL_eatG1P5VXkbtuBSPadaPGQfg3Dvc_KtD1i5mcgeKptD-TrDww/exec?p=Admin" 
+            allow="geolocation; camera; microphone; fullscreen; autoplay; display-capture;"
+            onload="overdriveLaunch()">
+    </iframe>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const regionalNodes = [
+            { n: "PRO9 HQ (CAMP ABENDAN)", p: [6.9576, 122.1444], isHQ: true },
+            { n: "SULU BARANGAY STATIONS", p: [6.0000, 121.0000], isHQ: false },
+            { n: "ISABELA CITY DIVISION", p: [6.7042, 121.9711], isHQ: false },
+            { n: "ZAMBOANGA SIBUGAY PROVINCIAL HQ", p: [7.7811, 122.7244], isHQ: false },
+            { n: "ZAMBOANGA DEL SUR PROVINCIAL HQ", p: [7.8283, 123.4344], isHQ: false },
+            { n: "ZAMBOANGA DEL NORTE PROVINCIAL HQ", p: [8.2003, 123.0012], isHQ: false }
+        ];
+
+        // Start wide out
+        const map = L.map('nav-map', { zoomControl: false, attributionControl: false, zoomAnimation: true }).setView([7.4000, 122.3000], 7);
+        
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            updateWhenIdle: true
+        }).addTo(map);
+
+        regionalNodes.forEach(node => {
+            const markerColor = node.isHQ ? '#ffb700' : '#00d4ff';
+            const pulseClassName = node.isHQ ? 'hq-pulse-ring' : 'pulse-ring';
+            const tooltipClassName = node.isHQ ? 'tactical-label hq-label' : 'tactical-label';
+
+            L.circleMarker(node.p, { radius: node.isHQ ? 7 : 5, color: '#fff', fillColor: markerColor, fillOpacity: 1, weight: 2 }).addTo(map)
+             .bindTooltip(node.n, { permanent: true, direction: 'right', offset: [12, 0], className: tooltipClassName });
+            
+            L.circleMarker(node.p, { radius: node.isHQ ? 22 : 15, color: markerColor, weight: 1, fillOpacity: 0, className: pulseClassName }).addTo(map);
+        });
+
+        // FAST ANIMATION: Trigger an aggressive, high-speed reel snap zoom to HQ location immediately
+        setTimeout(() => {
+            map.flyTo([6.9576, 122.1444], 14, { duration: 0.55, easeLinearity: 0.1 });
+        }, 150);
+
+        function overdriveLaunch() {
+            const frame = document.getElementById('secure-frame');
+            const hud = document.getElementById('hud');
+
+            // Quick pan-out sweep on interface release
+            map.flyTo([7.4000, 122.3000], 8, { duration: 0.5, easeLinearity: 0.1 });
+
+            setTimeout(() => {
+                frame.style.visibility = "visible";
+                frame.style.opacity = "1";
+                hud.style.opacity = "0";
+                
+                setTimeout(() => { 
+                    document.getElementById('nav-map').remove();
+                    hud.remove();
+                }, 400);
+            }, 450);
+        }
+
+        // System Protections
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) {
+                return false;
+            }
+        };
+
+        // Auto Refresh
+        let idleTime = 0;
+        const resetIdle = () => idleTime = 0;
+        ['mousemove', 'keypress', 'touchstart'].forEach(evt => window.addEventListener(evt, resetIdle));
+
+        setInterval(() => {
+            idleTime++;
+            if (idleTime >= 30) window.location.reload();
+        }, 60000);
+    </script>
+</body>
+</html>
