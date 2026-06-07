@@ -17,113 +17,120 @@
             --defense-green: #00ff66;
             --alert-amber: #ffb700;
             --bg-black: #010b1a;
-            --snap-curve: cubic-bezier(0.05, 0.9, 0.1, 1);
+            --kinetic-snap: cubic-bezier(0.0, 0.95, 0.05, 1);
         }
 
         body, html { 
             margin: 0; padding: 0; height: 100%; width: 100%; 
             overflow: hidden; background-color: var(--bg-black); 
             position: fixed; font-family: 'Segoe UI', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* HARDWARE-ACCELERATED CINEMATIC VIDEO BACKGROUND LAYER */
+        /* HARDWARE-ACCELERATED ULTRA-FLUID VIDEO CANVAS */
         .video-matrix-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1; overflow: hidden; background: var(--bg-black);
+            transform: translate3d(0, 0, 0); backface-visibility: hidden;
         }
         .video-matrix-bg video {
             width: 100%; height: 100%; object-fit: cover;
-            filter: brightness(0.28) contrast(1.4) saturate(0.5) hue-rotate(185deg);
+            filter: brightness(0.24) contrast(1.45) saturate(0.55) hue-rotate(185deg);
+            transform: scale(1.02);
             will-change: transform, opacity;
         }
 
-        /* HYPER-SPEED GEOSPATIAL VECTOR MAP LAYER */
+        /* HIGH-VELOCITY GEOSPATIAL RADAR GRAPHICS LAYER */
         #nav-map {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2; mix-blend-mode: screen;
             background: transparent !important;
             will-change: transform, opacity;
+            transform: translate3d(0,0,0);
         }
 
-        /* Forces Leaflet to maintain transparency for video visibility */
+        /* Absolute map rendering node bypasses */
         .leaflet-container { background: transparent !important; }
+        .leaflet-tile-container img { will-change: transform, opacity; filter: inherit; }
 
-        /* HUD OVERLAY - CONTROL SYSTEM */
+        /* ADVANCED SUB-SYSTEM CONSOLE OVERLAY */
         #hud {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
-            background: radial-gradient(circle, transparent 15%, rgba(1, 11, 26, 0.95) 100%);
-            transition: opacity 0.35s var(--snap-curve);
+            background: radial-gradient(circle, transparent 15%, rgba(1, 11, 26, 0.96) 100%);
+            transition: opacity 0.35s var(--kinetic-snap);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         .hud-frame-box {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 35px 50px; position: relative;
-            transform: scale(0.88);
-            animation: targetLock 0.45s var(--snap-curve) forwards;
+            padding: 40px 60px; position: relative;
+            transform: scale(0.8); opacity: 0;
+            animation: tacticalTargetLock 0.5s var(--kinetic-snap) forwards;
         }
 
-        /* Premium Target Framing Brackets */
+        /* Kinetic Locking HUD Corner Targets */
         .hud-frame-box::before, .hud-frame-box::after {
-            content: ''; position: absolute; width: 35px; height: 35px;
+            content: ''; position: absolute; width: 40px; height: 40px;
             border-color: var(--tactical-blue); border-style: solid;
+            transition: all 0.3s var(--kinetic-snap);
         }
-        .hud-frame-box::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
-        .hud-frame-box::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+        .hud-frame-box::before { top: 0; left: 0; border-width: 3px 0 0 3px; transform: translate(-5px, -5px); }
+        .hud-frame-box::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; transform: translate(5px, 5px); }
 
         .entrance-logo {
-            width: 115px; height: auto;
-            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6));
+            width: 120px; height: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.7));
         }
 
         .header-container {
             text-align: center; color: #ffffff; text-transform: uppercase;
-            margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 4px;
         }
 
         .header-container h1 { 
-            margin: 0; font-size: 1.45rem; letter-spacing: 5px; font-weight: 900; 
-            text-shadow: 0 0 12px var(--tactical-blue);
+            margin: 0; font-size: 1.5rem; letter-spacing: 6px; font-weight: 900; 
+            text-shadow: 0 0 15px var(--tactical-blue);
         }
 
         .header-container .system-title {
-            font-size: 0.8rem; letter-spacing: 3px; color: var(--tactical-blue); font-weight: 700; margin: 0;
+            font-size: 0.85rem; letter-spacing: 4px; color: var(--tactical-blue); font-weight: 700; margin: 0;
         }
 
         .header-container .system-status {
-            font-size: 0.65rem; letter-spacing: 2px; color: var(--defense-green); font-family: monospace; margin: 8px 0 0 0;
+            font-size: 0.65rem; letter-spacing: 2px; color: var(--defense-green); font-family: monospace; margin: 10px 0 0 0;
+            background: rgba(0, 255, 102, 0.08); padding: 2px 8px; border-radius: 3px; border: 1px solid rgba(0, 255, 102, 0.2);
         }
 
-        /* TACTICAL MAP NODES */
+        /* RE-ENGINEERED VECTOR GEOSPATIAL GRAPHICS LABELS */
         .tactical-label {
             background: rgba(1, 11, 26, 0.95) !important; border: 1px solid var(--tactical-blue) !important;
             color: #ffffff !important; font-weight: 700 !important; font-family: monospace !important;
-            font-size: 10px !important; padding: 2px 7px !important; border-radius: 3px !important;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3); text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 10px !important; padding: 3px 8px !important; border-radius: 4px !important;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;
         }
 
         .hq-label {
             border-color: var(--alert-amber) !important; color: var(--alert-amber) !important; font-weight: 900 !important;
-            box-shadow: 0 0 15px rgba(255, 183, 0, 0.4) !important;
+            box-shadow: 0 0 20px rgba(255, 183, 0, 0.5) !important;
         }
 
-        @keyframes nodePulse { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2.3); opacity: 0; } }
-        .pulse-ring { border: 2px solid var(--defense-green); border-radius: 50%; animation: nodePulse 1.3s infinite linear; }
-        .hq-pulse-ring { border: 2px solid var(--alert-amber); border-radius: 50%; animation: nodePulse 1.3s infinite linear; }
+        @keyframes pulseMatrix { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+        .pulse-ring { border: 2px solid var(--defense-green); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); }
+        .hq-pulse-ring { border: 2px solid var(--alert-amber); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); }
         
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes highSpeedSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loader-ring {
-            border: 3px solid rgba(255,255,255,0.03); border-top: 3px solid var(--tactical-blue); 
-            border-radius: 50%; width: 36px; height: 36px; 
-            animation: spin 0.55s linear infinite; margin-top: 25px;
+            border: 3px solid rgba(0, 212, 255, 0.05); border-top: 3px solid var(--tactical-blue); 
+            border-radius: 50%; width: 38px; height: 38px; 
+            animation: highSpeedSpin 0.45s linear infinite; margin-top: 25px;
         }
 
-        @keyframes targetLock { to { transform: scale(1); } }
+        @keyframes tacticalTargetLock { to { transform: scale(1); opacity: 1; } }
 
         #secure-frame {
             position: absolute; width: 100%; height: 100%; border: none; z-index: 100; 
-            opacity: 0; visibility: hidden; transition: opacity 0.35s var(--snap-curve);
+            opacity: 0; visibility: hidden; transition: opacity 0.4s var(--kinetic-snap);
         }
     </style>
 </head>
@@ -143,7 +150,7 @@
             <div class="header-container">
                 <h1>POLICE REGIONAL OFFICE 9</h1>
                 <p class="system-title">BODY MASS INDEX MONITORING SYSTEM</p>
-                <p class="system-status">// INITIALIZING VIDEO HUD MATRIX OVERDRIVE...</p>
+                <p class="system-status">// CORE SECURITY PROTOCOLS COMMITTED: ACCESSING INTERFACE...</p>
             </div>
             <div class="loader-ring"></div>
         </div>
@@ -167,11 +174,18 @@
             { n: "ZAMBOANGA DEL NORTE PROVINCIAL HQ", p: [8.2003, 123.0012], isHQ: false }
         ];
 
-        // Boot wide view
-        const map = L.map('nav-map', { zoomControl: false, attributionControl: false, zoomAnimation: true }).setView([7.4000, 122.3000], 7);
+        // Boot system out wide at lightning execution bounds
+        const map = L.map('nav-map', { 
+            zoomControl: false, 
+            attributionControl: false, 
+            zoomAnimation: true,
+            markerZoomAnimation: true,
+            preferCanvas: true 
+        }).setView([7.4000, 122.3000], 7);
         
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            updateWhenIdle: true
+            updateWhenIdle: false,
+            keepBuffer: 3
         }).addTo(map);
 
         regionalNodes.forEach(node => {
@@ -180,46 +194,46 @@
             const tooltipClassName = node.isHQ ? 'tactical-label hq-label' : 'tactical-label';
 
             L.circleMarker(node.p, { radius: node.isHQ ? 7 : 5, color: '#fff', fillColor: markerColor, fillOpacity: 1, weight: 2 }).addTo(map)
-             .bindTooltip(node.n, { permanent: true, direction: 'right', offset: [12, 0], className: tooltipClassName });
+             .bindTooltip(node.n, { permanent: true, direction: 'right', offset: [14, 0], className: tooltipClassName });
             
-            L.circleMarker(node.p, { radius: node.isHQ ? 22 : 15, color: markerColor, weight: 1, fillOpacity: 0, className: pulseClassName }).addTo(map);
+            L.circleMarker(node.p, { radius: node.isHQ ? 24 : 16, color: markerColor, weight: 1.5, fillOpacity: 0, className: pulseClassName }).addTo(map);
         });
 
-        // REEL-SNAP ZOOM: Instant hyper-speed sweep targeting Camp Abendan HQ coordinate metrics
+        // MAXIMUM SPEED KINETIC CAMERA SNAP: Pinpoints Camp Abendan instantly with aggressive ease
         setTimeout(() => {
-            map.flyTo([6.9576, 122.1444], 14, { duration: 0.48, easeLinearity: 0.05 });
-        }, 120);
+            map.flyTo([6.9576, 122.1444], 14, { duration: 0.42, easeLinearity: 0.02 });
+        }, 100);
 
         function overdriveLaunch() {
             const frame = document.getElementById('secure-frame');
             const hud = document.getElementById('hud');
             const videoContainer = document.querySelector('.video-matrix-bg');
 
-            // Quick pan-out camera sweep on frame interface load
-            map.flyTo([7.4000, 122.3000], 8, { duration: 0.42, easeLinearity: 0.05 });
+            // Kinetic snap out directly synchronized with access allowance
+            map.flyTo([7.4000, 122.3000], 8, { duration: 0.38, easeLinearity: 0.02 });
 
             setTimeout(() => {
                 frame.style.visibility = "visible";
                 frame.style.opacity = "1";
                 hud.style.opacity = "0";
                 
-                // Clear assets out asynchronously to prevent device lockups
+                // Fast garbage clean collection to permanently free up host memory blocks
                 setTimeout(() => { 
                     document.getElementById('nav-map').remove();
                     if(videoContainer) videoContainer.remove();
                     hud.remove();
                 }, 400);
-            }, 380);
+            }, 320);
         }
 
-        // Production Protection Engine
+        // Global Production Protection Matrix
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) {
                 return false;
             }
         };
 
-        // Automated Session Reset Tracking
+        // System Heartbeat Keep-Alive Loop
         let idleTime = 0;
         const resetIdle = () => idleTime = 0;
         ['mousemove', 'keypress', 'touchstart'].forEach(evt => window.addEventListener(evt, resetIdle));
