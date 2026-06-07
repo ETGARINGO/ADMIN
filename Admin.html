@@ -13,54 +13,57 @@
     
     <style>
         :root {
-            --tactical-blue: #00d4ff;
-            --defense-green: #00ff66;
-            --alert-amber: #ffb700;
-            --bg-black: #010b1a;
+            /* RE-TUNED HIGH-CONTRAST TACTICAL PALETTE */
+            --tactical-cyan: #00f0ff;       /* Pure luminescent signal blue */
+            --matrix-green: #00ff41;        /* True military terminal green */
+            --alert-crimson: #ff0055;       /* Sharp, high-visibility hazard red */
+            --bg-deep-space: #01060f;       /* Ultimate black backdrop */
             --kinetic-snap: cubic-bezier(0.0, 0.95, 0.05, 1);
         }
 
         body, html { 
             margin: 0; padding: 0; height: 100%; width: 100%; 
-            overflow: hidden; background-color: var(--bg-black); 
+            overflow: hidden; background-color: var(--bg-deep-space); 
             position: fixed; font-family: 'Segoe UI', -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* INCREASED VISIBILITY CINEMATIC VIDEO CANVAS */
+        /* BALANCED RECONNAISSANCE VIDEO MATRIX */
         .video-matrix-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; overflow: hidden; background: var(--bg-black);
+            z-index: 1; overflow: hidden; background: var(--bg-deep-space);
             transform: translate3d(0, 0, 0); backface-visibility: hidden;
         }
         .video-matrix-bg video {
             width: 100%; height: 100%; object-fit: cover;
-            /* Upgraded brightness to 0.55 and balanced contrast for explicit visibility */
-            filter: brightness(0.55) contrast(1.3) saturate(0.7) hue-rotate(185deg);
+            /* Balanced at 0.45 brightness for optimized tactical look */
+            filter: brightness(0.45) contrast(1.5) saturate(0.4) hue-rotate(190deg);
             transform: scale(1.02);
             will-change: transform, opacity;
         }
 
-        /* HIGH-SPEED GEOSPATIAL RADAR GRAPHICS LAYER */
+        /* HIGH-CONTRAST VECTOR TACTICAL MAP CONTAINER */
         #nav-map {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2; mix-blend-mode: screen;
             background: transparent !important;
             will-change: transform, opacity;
             transform: translate3d(0,0,0);
-            opacity: 0.85; /* Slightly relaxed map opacity to let video asset details emerge */
+            opacity: 0.9;
         }
 
-        /* Absolute map rendering node bypasses */
+        /* Night-vision terminal satellite map layout adjustment */
         .leaflet-container { background: transparent !important; }
-        .leaflet-tile-container img { will-change: transform, opacity; filter: inherit; }
+        .leaflet-tile-container img { 
+            will-change: transform, opacity; 
+            filter: brightness(0.35) contrast(1.6) saturate(0.1) hue-rotate(180deg) invert(0.05) !important;
+        }
 
-        /* ADVANCED SUB-SYSTEM CONSOLE OVERLAY */
+        /* TACTICAL HEADS-UP DISPLAY OVERLAY */
         #hud {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; pointer-events: none;
-            /* Lightened background inner gradient core to prevent center video washing out */
-            background: radial-gradient(circle, rgba(1, 11, 26, 0.2) 15%, rgba(1, 11, 26, 0.93) 100%);
+            background: radial-gradient(circle, rgba(1, 6, 15, 0.1) 20%, rgba(1, 6, 15, 0.96) 100%);
             transition: opacity 0.35s var(--kinetic-snap);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
@@ -72,61 +75,65 @@
             animation: tacticalTargetLock 0.5s var(--kinetic-snap) forwards;
         }
 
-        /* Kinetic Locking HUD Corner Targets */
+        /* Laser-Sharp Target Frame Brackets */
         .hud-frame-box::before, .hud-frame-box::after {
-            content: ''; position: absolute; width: 40px; height: 40px;
-            border-color: var(--tactical-blue); border-style: solid;
+            content: ''; position: absolute; width: 45px; height: 45px;
+            border-color: var(--tactical-cyan); border-style: solid;
             transition: all 0.3s var(--kinetic-snap);
+            filter: drop-shadow(0 0 8px var(--tactical-cyan));
         }
         .hud-frame-box::before { top: 0; left: 0; border-width: 3px 0 0 3px; transform: translate(-5px, -5px); }
         .hud-frame-box::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; transform: translate(5px, 5px); }
 
         .entrance-logo {
             width: 120px; height: auto;
-            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.7));
+            filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.65));
         }
 
         .header-container {
             text-align: center; color: #ffffff; text-transform: uppercase;
-            margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
 
         .header-container h1 { 
-            margin: 0; font-size: 1.5rem; letter-spacing: 6px; font-weight: 900; 
-            text-shadow: 0 0 15px var(--tactical-blue);
+            margin: 0; font-size: 1.55rem; letter-spacing: 6px; font-weight: 900; 
+            text-shadow: 0 0 15px var(--tactical-cyan);
         }
 
         .header-container .system-title {
-            font-size: 0.85rem; letter-spacing: 4px; color: var(--tactical-blue); font-weight: 700; margin: 0;
+            font-size: 0.85rem; letter-spacing: 4px; color: var(--tactical-cyan); font-weight: 700; margin: 0;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
         }
 
         .header-container .system-status {
-            font-size: 0.65rem; letter-spacing: 2px; color: var(--defense-green); font-family: monospace; margin: 10px 0 0 0;
-            background: rgba(0, 255, 102, 0.12); padding: 2px 8px; border-radius: 3px; border: 1px solid rgba(0, 255, 102, 0.3);
+            font-size: 0.65rem; letter-spacing: 2px; color: var(--matrix-green); font-family: monospace; margin: 12px 0 0 0;
+            background: rgba(0, 255, 65, 0.06); padding: 3px 10px; border-radius: 2px; border: 1px solid rgba(0, 255, 65, 0.3);
+            text-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
         }
 
-        /* RE-ENGINEERED VECTOR GEOSPATIAL GRAPHICS LABELS */
+        /* LUMINESCENT NODE GRAPHICS MARKERS */
         .tactical-label {
-            background: rgba(1, 11, 26, 0.95) !important; border: 1px solid var(--tactical-blue) !important;
+            background: rgba(1, 6, 15, 0.95) !important; border: 1px solid var(--tactical-cyan) !important;
             color: #ffffff !important; font-weight: 700 !important; font-family: monospace !important;
-            font-size: 10px !important; padding: 3px 8px !important; border-radius: 4px !important;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); text-transform: uppercase; letter-spacing: 1px;
+            font-size: 10px !important; padding: 3px 8px !important; border-radius: 2px !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important; text-transform: uppercase; letter-spacing: 1px;
         }
 
         .hq-label {
-            border-color: var(--alert-amber) !important; color: var(--alert-amber) !important; font-weight: 900 !important;
-            box-shadow: 0 0 20px rgba(255, 183, 0, 0.5) !important;
+            border-color: var(--alert-crimson) !important; color: var(--alert-crimson) !important; font-weight: 900 !important;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.5) !important;
         }
 
         @keyframes pulseMatrix { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-        .pulse-ring { border: 2px solid var(--defense-green); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); }
-        .hq-pulse-ring { border: 2px solid var(--alert-amber); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); }
+        .pulse-ring { border: 2px solid var(--matrix-green); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 4px var(--matrix-green)); }
+        .hq-pulse-ring { border: 2px solid var(--alert-crimson); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 6px var(--alert-crimson)); }
         
         @keyframes highSpeedSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loader-ring {
-            border: 3px solid rgba(0, 212, 255, 0.05); border-top: 3px solid var(--tactical-blue); 
+            border: 3px solid rgba(0, 240, 255, 0.05); border-top: 3px solid var(--tactical-cyan); 
             border-radius: 50%; width: 38px; height: 38px; 
             animation: highSpeedSpin 0.45s linear infinite; margin-top: 25px;
+            filter: drop-shadow(0 0 6px var(--tactical-cyan));
         }
 
         @keyframes tacticalTargetLock { to { transform: scale(1); opacity: 1; } }
@@ -153,7 +160,7 @@
             <div class="header-container">
                 <h1>POLICE REGIONAL OFFICE 9</h1>
                 <p class="system-title">BODY MASS INDEX MONITORING SYSTEM</p>
-                <p class="system-status">// AMPLIFYING MEDIA VISIBILITY OVERLAYS: SYSTEM STABLE...</p>
+                <p class="system-status">// SPECOPS COLORTUNE COMPLETED: EXECUTING SNAP STREAM...</p>
             </div>
             <div class="loader-ring"></div>
         </div>
@@ -177,7 +184,6 @@
             { n: "ZAMBOANGA DEL NORTE PROVINCIAL HQ", p: [8.2003, 123.0012], isHQ: false }
         ];
 
-        // Boot system out wide at lightning execution bounds
         const map = L.map('nav-map', { 
             zoomControl: false, 
             attributionControl: false, 
@@ -192,7 +198,7 @@
         }).addTo(map);
 
         regionalNodes.forEach(node => {
-            const markerColor = node.isHQ ? '#ffb700' : '#00d4ff';
+            const markerColor = node.isHQ ? '#ff0055' : '#00f0ff';
             const pulseClassName = node.isHQ ? 'hq-pulse-ring' : 'pulse-ring';
             const tooltipClassName = node.isHQ ? 'tactical-label hq-label' : 'tactical-label';
 
@@ -202,7 +208,7 @@
             L.circleMarker(node.p, { radius: node.isHQ ? 24 : 16, color: markerColor, weight: 1.5, fillOpacity: 0, className: pulseClassName }).addTo(map);
         });
 
-        // MAXIMUM SPEED KINETIC CAMERA SNAP: Pinpoints Camp Abendan instantly with aggressive ease
+        // MAXIMUM SPEED KINETIC CAMERA SNAP
         setTimeout(() => {
             map.flyTo([6.9576, 122.1444], 14, { duration: 0.42, easeLinearity: 0.02 });
         }, 100);
@@ -212,7 +218,6 @@
             const hud = document.getElementById('hud');
             const videoContainer = document.querySelector('.video-matrix-bg');
 
-            // Kinetic snap out directly synchronized with access allowance
             map.flyTo([7.4000, 122.3000], 8, { duration: 0.38, easeLinearity: 0.02 });
 
             setTimeout(() => {
@@ -220,7 +225,6 @@
                 frame.style.opacity = "1";
                 hud.style.opacity = "0";
                 
-                // Fast garbage clean collection to permanently free up host memory blocks
                 setTimeout(() => { 
                     document.getElementById('nav-map').remove();
                     if(videoContainer) videoContainer.remove();
