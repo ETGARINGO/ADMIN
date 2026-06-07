@@ -38,6 +38,12 @@
             filter: brightness(0.45) contrast(1.5) saturate(0.4) hue-rotate(190deg);
             transform: scale(1.02);
             will-change: transform, opacity;
+            transition: filter 0.5s var(--kinetic-snap);
+        }
+
+        /* CLEAR BG UPGRADE TARGET RULE */
+        body.matrix-active .video-matrix-bg video {
+            filter: brightness(0.95) contrast(1.1) saturate(1.0) hue-rotate(0deg) !important;
         }
 
         /* PERMANENT GEOSPATIAL RADAR LAYER */
@@ -48,12 +54,23 @@
             will-change: transform, opacity;
             transform: translate3d(0,0,0);
             opacity: 0.9;
+            transition: filter 0.5s var(--kinetic-snap), opacity 0.5s var(--kinetic-snap);
         }
 
         .leaflet-container { background: transparent !important; }
         .leaflet-tile-container img { 
             will-change: transform, opacity; 
             filter: brightness(0.35) contrast(1.6) saturate(0.1) hue-rotate(180deg) invert(0.05) !important;
+            transition: filter 0.5s var(--kinetic-snap);
+        }
+
+        /* CLEAR MAP TILE RE-TUNING ENGINE */
+        body.matrix-active .leaflet-tile-container img {
+            filter: brightness(0.95) contrast(1.1) saturate(1.0) hue-rotate(0deg) invert(0) !important;
+        }
+        body.matrix-active #nav-map {
+            mix-blend-mode: normal !important;
+            opacity: 1.0 !important;
         }
 
         /* HEADS-UP DISPLAY OVERLAY DEPLOYMENT FRAME */
@@ -248,7 +265,6 @@
         <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
         </svg>
-        Data Intake
     </button>
 
     <div class="tactical-sidebar-panel" id="sidebarPanel">
@@ -323,10 +339,16 @@
             map.flyTo([6.9576, 122.1444], 14, { duration: 0.42, easeLinearity: 0.02 });
         }, 100);
 
+        // UPGRADED LAUNCH SEQUENCE PROTOCOL
         function triggerOverdriveLaunch() {
             const frame = document.getElementById('secure-frame');
             const hud = document.getElementById('hud');
+            
+            // Inject class token to trigger instant native clear filtration filters across background structures
+            document.body.classList.add('matrix-active');
+
             map.flyTo([7.4000, 122.3000], 8, { duration: 0.45, easeLinearity: 0.05 });
+            
             setTimeout(() => {
                 frame.style.visibility = "visible";
                 frame.style.opacity = "0.92"; 
@@ -344,7 +366,6 @@
             }
         }
 
-        // MATRIX LAYOUT COUPLING SWITCH LOGIC
         function adjustFormLayout(mode) {
             const panel = document.getElementById('sidebarPanel');
             const btnSide = document.getElementById('btnSideView');
