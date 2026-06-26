@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Updated branding icon -->
+    <link rel="icon" type="image/png" href="pgslogo.png">
+    <link rel="apple-touch-icon" href="pgslogo.png">
+    
+    <title>PNP-PRO9 Personnel Satisfaction Survey</title>
+    
+    <style>
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; }
+        
+        .main-container { height: 100vh; position: relative; }
+        
+        /* Floating Toggle Button */
+        .fs-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            cursor: pointer;
+            background: rgba(0, 51, 102, 0.85); /* Dark Blue Theme for PNP */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
+        .fs-toggle:hover { background: #d4af37; color: #000; } /* PNP Gold Hover */
+
+        .sheet-container { height: 100%; width: 100%; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container" id="fullscreen-target">
+        <button class="fs-toggle" onclick="toggleFullscreen()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+
+        <div class="sheet-container">
+            <!-- Ensure your Google Apps Script URL is correct here -->
+            <iframe 
+                src="https://script.google.com/macros/s/AKfycbwmXI_lSj42TUptmbpdsyayOQ7ZvvbkNIZiDwk9eWYFSxWyNFVsdoxcbW_L5smsZwIm/exec"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        function toggleFullscreen() {
+            const elem = document.getElementById("fullscreen-target");
+            const btn = document.querySelector(".fs-toggle");
+            
+            // Icon for Full View
+            const enterIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>`;
+            // Icon for Exit
+            const exitIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/></svg>`;
+
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => console.error(err));
+                btn.innerHTML = exitIcon;
+            } else {
+                document.exitFullscreen();
+                btn.innerHTML = enterIcon;
+            }
+        }
+
+        // Sync icon when user presses Esc key
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                document.querySelector(".fs-toggle").innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>`;
+            }
+        });
+    </script>
+</body>
+</html>
