@@ -86,12 +86,40 @@
             flex-shrink: 0;
         }
 
-        .main-container { height: 100vh; width: 100vw; display: none; overflow: hidden; }
+        /* SURVEY USER INTERFACE WRAPPER */
+        .main-container { height: 100vh; width: 100vw; display: none; overflow: hidden; position: relative; }
         iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* FULLSCREEN FLOATING TOGGLE BUTTON */
+        .fs-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background: rgba(0, 26, 51, 0.85);
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .fs-toggle:hover {
+            background: #d4af37;
+            color: #001a33;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
+    <!-- PRE-REGISTRATION LOADER ACCORDION -->
     <div id="loader" onclick="startExperience()">
         <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
         <div id="typing-text">Please answer Honestly...</div>
@@ -102,7 +130,13 @@
         </div>
     </div>
 
+    <!-- MAIN DASHBOARD COMPONENT WITH FIXED FULLSCREEN CONTROLS -->
     <div class="main-container" id="survey-ui">
+        <button class="fs-toggle" onclick="toggleFullscreen()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+            </svg>
+        </button>
         <iframe src="https://script.google.com/macros/s/AKfycbyaPAqSQDt6r3ELReWVKmtMIXfjfMQ5cM4r5QaEbCGJAblvrYNLAV0dYO9HHDocBMDV/exec"></iframe>
     </div>
 
@@ -147,6 +181,18 @@
             window.speechSynthesis.cancel();
             document.getElementById('loader').style.display = 'none';
             document.getElementById('survey-ui').style.display = 'block';
+        }
+
+        // FULLSCREEN WEB API DRIVER
+        function toggleFullscreen() {
+            const target = document.getElementById("survey-ui");
+            if (!document.fullscreenElement) {
+                target.requestFullscreen().catch(err => {
+                    console.log(`Error enabling fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
         }
     </script>
 </body>
