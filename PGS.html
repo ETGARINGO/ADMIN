@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- Link Preview Meta Tags: Essential for Messenger/Viber visibility -->
     <title>PNP-PRO9 Personnel Satisfaction Survey</title>
+    
+    <!-- Meta Tags -->
     <meta property="og:title" content="PNP-PRO9 Personnel Satisfaction Survey">
     <meta property="og:description" content="Official Personnel Satisfaction Survey Portal">
-    <!-- Using ?raw=true ensures the logo renders in external apps -->
     <meta property="og:image" content="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
     <meta property="og:url" content="https://admin.rprmd9.site/PGS">
     <meta property="og:type" content="website">
@@ -18,66 +17,115 @@
     
     <style>
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #003366; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #003366; font-family: 'Inter', sans-serif; }
         
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #ffffff; z-index: 999;
+            background: #ffffff; z-index: 999; padding: 20px; text-align: center;
         }
 
         .brand-logo {
             width: 120px; height: 120px;
             animation: pulse 2s infinite ease-in-out;
             margin-bottom: 20px;
+        }
+
+        #typing-text {
+            max-width: 600px;
+            color: #003366;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            min-height: 180px;
+            text-align: left;
+            padding: 10px;
+        }
+
+        #proceed-btn {
+            padding: 15px 40px;
+            background: #003366;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            display: none;
+            transition: 0.3s;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
+        #proceed-btn:hover { background: #002244; transform: scale(1.05); }
 
-        .main-container { height: 100vh; width: 100vw; position: relative; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
+        .main-container { height: 100vh; width: 100vw; position: relative; }
         .fs-toggle {
             position: absolute; top: 20px; right: 20px; z-index: 100;
             background: rgba(0, 51, 102, 0.9); color: #d4af37;
             border: 2px solid #d4af37; padding: 12px; border-radius: 50%;
-            cursor: pointer; backdrop-filter: blur(5px);
-            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
         }
-
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <a href="https://admin.rprmd9.site/PGS" target="_blank">
-            <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
-        </a>
-        <div style="color: #003366; font-family: sans-serif; font-weight: bold; letter-spacing: 1px;">PLEASE ANSWER HONESTLY...</div>
+    <!-- Audio Element -->
+    <audio id="type-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+
+    <div id="loader" onclick="startAudio()">
+        <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
+        <div id="typing-text"></div>
+        <button id="proceed-btn" onclick="startSurvey()">PROCEED TO SURVEY</button>
     </div>
 
     <div class="main-container" id="fullscreen-target">
         <button class="fs-toggle" onclick="toggleFullscreen()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
         </button>
-        <iframe 
-            src="https://script.google.com/macros/s/AKfycbyaPAqSQDt6r3ELReWVKmtMIXfjfMQ5cM4r5QaEbCGJAblvrYNLAV0dYO9HHDocBMDV/exec"
-            onload="document.getElementById('loader').style.display='none'">
-        </iframe>
+        <iframe src="https://script.google.com/macros/s/AKfycbyaPAqSQDt6r3ELReWVKmtMIXfjfMQ5cM4r5QaEbCGJAblvrYNLAV0dYO9HHDocBMDV/exec"></iframe>
     </div>
 
     <script>
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.getElementById("fullscreen-target").requestFullscreen();
-            } else {
-                document.exitFullscreen();
+        const text = "Dear Respondents,\n\nThe Personnel Satisfaction Survey (PSS) is a key feedback mechanism for the PNP to assess the issues and concerns of both Uniformed and Non-Uniformed Personnel. Your results will help top management address these concerns effectively.\n\nYour participation is critical — findings will serve as the basis for programs, policy amendments, and strategic direction. Please answer honestly. Responses are strictly confidential.";
+        const speed = 35;
+        let i = 0;
+        const audio = document.getElementById("type-sound");
+
+        function startAudio() {
+            if (audio.paused) {
+                audio.play().catch(e => console.log("Interaction required for audio."));
             }
         }
+
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(i).replace(/\n/g, "<br>");
+                i++;
+                setTimeout(typeWriter, speed);
+            } else {
+                audio.pause();
+                document.getElementById("proceed-btn").style.display = "block";
+            }
+        }
+
+        function startSurvey() {
+            document.getElementById('loader').style.display = 'none';
+            audio.pause();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) { document.getElementById("fullscreen-target").requestFullscreen(); }
+            else { document.exitFullscreen(); }
+        }
+
+        // Initialize
+        window.onload = () => {
+            typeWriter();
+            // Attempt to play audio immediately
+            audio.play().catch(() => {});
+        };
     </script>
 </body>
 </html>
