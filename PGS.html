@@ -4,128 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PNP-PRO9 Personnel Satisfaction Survey</title>
-    
-    <!-- Meta Tags -->
-    <meta property="og:title" content="PNP-PRO9 Personnel Satisfaction Survey">
-    <meta property="og:description" content="Official Personnel Satisfaction Survey Portal">
-    <meta property="og:image" content="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
-    <meta property="og:url" content="https://admin.rprmd9.site/PGS">
-    <meta property="og:type" content="website">
-
-    <link rel="icon" type="image/png" href="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,600;1,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #003366; font-family: 'Inter', sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #001a33; font-family: 'Inter', sans-serif; overflow: hidden; }
         
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #ffffff; z-index: 999; padding: 20px; text-align: center;
+            background: radial-gradient(circle, #00264d 0%, #001a33 100%);
+            z-index: 999; padding: 40px; color: #e0e0e0; cursor: pointer;
         }
 
-        .brand-logo {
-            width: 120px; height: 120px;
-            animation: pulse 2s infinite ease-in-out;
-            margin-bottom: 20px;
-        }
+        .brand-logo { width: 150px; margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
 
         #typing-text {
-            max-width: 600px;
-            color: #003366;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            min-height: 180px;
-            text-align: left;
-            padding: 10px;
+            max-width: 700px; font-family: 'Crimson Text', serif;
+            font-size: 1.5rem; line-height: 1.8; color: #fff;
+            text-align: center; border-left: 3px solid #d4af37; padding-left: 20px;
         }
 
         #proceed-btn {
-            padding: 15px 40px;
-            background: #003366;
-            color: #d4af37;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            display: none;
-            transition: 0.3s;
+            margin-top: 40px; padding: 15px 50px;
+            background: transparent; color: #d4af37;
+            border: 2px solid #d4af37; border-radius: 4px;
+            cursor: pointer; font-weight: bold; font-size: 1.1rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            display: none; transition: 0.4s;
         }
 
-        #proceed-btn:hover { background: #002244; transform: scale(1.05); }
-
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        #proceed-btn:hover { background: #d4af37; color: #001a33; }
         
-        .main-container { height: 100vh; width: 100vw; position: relative; }
-        .fs-toggle {
-            position: absolute; top: 20px; right: 20px; z-index: 100;
-            background: rgba(0, 51, 102, 0.9); color: #d4af37;
-            border: 2px solid #d4af37; padding: 12px; border-radius: 50%;
-            cursor: pointer;
-        }
+        .main-container { height: 100vh; width: 100vw; display: none; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <!-- Audio Element -->
-    <audio id="type-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
-
-    <div id="loader" onclick="startAudio()">
+    <div id="loader" onclick="startExperience()">
         <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
-        <div id="typing-text"></div>
-        <button id="proceed-btn" onclick="startSurvey()">PROCEED TO SURVEY</button>
+        <div id="typing-text"> Please answer honestly...</div>
+        <button id="proceed-btn" onclick="startSurvey(event)">PROCEED TO SURVEY</button>
     </div>
 
-    <div class="main-container" id="fullscreen-target">
-        <button class="fs-toggle" onclick="toggleFullscreen()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-        </button>
+    <div class="main-container" id="survey-ui">
         <iframe src="https://script.google.com/macros/s/AKfycbyaPAqSQDt6r3ELReWVKmtMIXfjfMQ5cM4r5QaEbCGJAblvrYNLAV0dYO9HHDocBMDV/exec"></iframe>
     </div>
 
     <script>
-        const text = "Dear Respondents,\n\nThe Personnel Satisfaction Survey (PSS) is a key feedback mechanism for the PNP to assess the issues and concerns of both Uniformed and Non-Uniformed Personnel. Your results will help top management address these concerns effectively.\n\nYour participation is critical — findings will serve as the basis for programs, policy amendments, and strategic direction. Please answer honestly. Responses are strictly confidential.";
-        const speed = 35;
-        let i = 0;
-        const audio = document.getElementById("type-sound");
+        const message = "Dear Respondents, The Personnel Satisfaction Survey (PSS) is a key feedback mechanism for the PNP to assess the issues and concerns of both Uniformed and Non-Uniformed Personnel. Your results will help top management address these concerns effectively. Your participation is critical — findings will serve as the basis for programs, policy amendments, and strategic direction. Please answer honestly. Responses are strictly confidential.";
+        const typeEl = document.getElementById("typing-text");
+        const btn = document.getElementById("proceed-btn");
+        let hasStarted = false;
 
-        function startAudio() {
-            if (audio.paused) {
-                audio.play().catch(e => console.log("Interaction required for audio."));
+        async function startExperience() {
+            if (hasStarted) return;
+            hasStarted = true;
+            typeEl.innerHTML = ""; // Clear the "Click to begin" text
+
+            // 1. Start Speech
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.rate = 0.9;
+            utterance.pitch = 0.8;
+            window.speechSynthesis.speak(utterance);
+
+            // 2. Start Typing Effect
+            let i = 0;
+            function type() {
+                if (i < message.length) {
+                    typeEl.innerHTML += message.charAt(i);
+                    i++;
+                    setTimeout(type, 40);
+                } else {
+                    btn.style.display = "block";
+                }
             }
+            type();
         }
 
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("typing-text").innerHTML += text.charAt(i).replace(/\n/g, "<br>");
-                i++;
-                setTimeout(typeWriter, speed);
-            } else {
-                audio.pause();
-                document.getElementById("proceed-btn").style.display = "block";
-            }
-        }
-
-        function startSurvey() {
+        function startSurvey(event) {
+            event.stopPropagation(); // Prevent triggering the loader click again
+            window.speechSynthesis.cancel();
             document.getElementById('loader').style.display = 'none';
-            audio.pause();
+            document.getElementById('survey-ui').style.display = 'block';
         }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) { document.getElementById("fullscreen-target").requestFullscreen(); }
-            else { document.exitFullscreen(); }
-        }
-
-        // Initialize
-        window.onload = () => {
-            typeWriter();
-            // Attempt to play audio immediately
-            audio.play().catch(() => {});
-        };
     </script>
 </body>
 </html>
