@@ -34,17 +34,42 @@
             margin-bottom: 20px; min-height: 100px;
         }
 
+        /* FLASHING POLICE SIREN BUTTON EFFECT */
         #proceed-btn {
-            padding: 12px 40px;
-            background: transparent; color: #d4af37;
-            border: 2px solid #d4af37; border-radius: 4px;
-            cursor: pointer; font-weight: bold; font-size: 1rem;
-            text-transform: uppercase; letter-spacing: 2px;
-            display: none; transition: 0.4s; margin-bottom: 30px;
+            padding: 14px 45px;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: none;
+            margin-bottom: 30px;
             flex-shrink: 0;
+            outline: none;
+            animation: policeSiren 0.6s infinite alternate;
+            transition: transform 0.2s ease-in-out;
         }
 
-        #proceed-btn:hover { background: #d4af37; color: #001a33; }
+        #proceed-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* POLICE SIREN KEYFRAMES (RED & BLUE ALTERNATING LIGHTS) */
+        @keyframes policeSiren {
+            0% {
+                background-color: #ff0033;
+                box-shadow: 0 0 15px #ff0033, 0 0 30px #ff0033;
+                text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+            }
+            100% {
+                background-color: #0044ff;
+                box-shadow: 0 0 15px #0044ff, 0 0 30px #0044ff;
+                text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+            }
+        }
         
         /* FIXED FOOTER POSITIONING WITHIN LOADER */
         .footer-notice {
@@ -69,11 +94,11 @@
 
     <div id="loader" onclick="startExperience()">
         <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
-        <div id="typing-text">Please answer Honestl...</div>
+        <div id="typing-text">TAP ANYWHERE TO BEGIN REGISTRATION NOTICE...</div>
         <button id="proceed-btn" onclick="startSurvey(event)">PROCEED TO SURVEY</button>
         
         <div class="footer-notice">
-            RPRMD PRO9 © 2026
+            RPRMD PRO9 Portal © 2026
         </div>
     </div>
 
