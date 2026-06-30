@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PNP-PRO9 Personnel Satisfaction Survey</title>
+    
+    <!-- Link Preview / Open Graph Meta Tags -->
+    <meta property="og:title" content="PNP-PRO9 Personnel Satisfaction Survey">
+    <meta property="og:description" content="Official Personnel Satisfaction Survey Portal">
+    <meta property="og:image" content="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
+    <meta property="og:url" content="https://admin.rprmd9.site/PGS">
+    <meta property="og:type" content="website">
+
+    <!-- Favicons & App Icons (Fixed syntax errors) -->
+    <link rel="icon" type="image/png" href="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
+    <link rel="apple-touch-icon" href="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,600;1,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #001a33; font-family: 'Inter', sans-serif; }
+        
+        /* SCROLLABLE INTRO CONTAINER TO VIEW ALL ELEMENTS */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            background: radial-gradient(circle, #00264d 0%, #001a33 100%);
+            z-index: 999; padding: 30px 20px; color: #e0e0e0; cursor: pointer;
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+        }
+
+        .brand-logo { 
+            width: 140px; 
+            margin-top: auto; /* Pushes content down elegantly */
+            margin-bottom: 20px; 
+            filter: drop-shadow(0 0 10px rgba(212,175,55,0.5)); 
+            flex-shrink: 0;
+        }
+
+        #typing-text {
+            max-width: 650px; font-family: 'Crimson Text', serif;
+            font-size: 1.4rem; line-height: 1.6; color: #fff;
+            text-align: center; border-left: 3px solid #d4af37; padding: 0 15px;
+            margin-bottom: 20px; min-height: 100px;
+        }
+
+        /* FLASHING POLICE SIREN BUTTON EFFECT */
+        #proceed-btn {
+            padding: 14px 45px;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: none;
+            margin-bottom: 30px;
+            flex-shrink: 0;
+            outline: none;
+            animation: policeSiren 0.6s infinite alternate;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        #proceed-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* POLICE SIREN KEYFRAMES (RED & BLUE ALTERNATING LIGHTS) */
+        @keyframes policeSiren {
+            0% {
+                background-color: #ff0033;
+                box-shadow: 0 0 15px #ff0033, 0 0 30px #ff0033;
+                text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+            }
+            100% {
+                background-color: #0044ff;
+                box-shadow: 0 0 15px #0044ff, 0 0 30px #0044ff;
+                text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+            }
+        }
+        
+        /* FIXED FOOTER POSITIONING WITHIN LOADER */
+        .footer-notice {
+            margin-top: auto; /* Pins footer safely to the bottom of layout */
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212,175,55,0.1);
+            width: 100%;
+            max-width: 400px;
+            flex-shrink: 0;
+        }
+
+        /* SURVEY USER INTERFACE WRAPPER */
+        .main-container { height: 100vh; width: 100vw; display: none; overflow: hidden; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* FULLSCREEN FLOATING TOGGLE BUTTON */
+        .fs-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background: rgba(0, 26, 51, 0.85);
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .fs-toggle:hover {
+            background: #d4af37;
+            color: #001a33;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PRE-REGISTRATION LOADER ACCORDION -->
+    <div id="loader" onclick="startExperience()">
+        <img src="https://github.com/ETGARINGO/ADMIN/blob/main/pgslogo.png?raw=true" alt="Logo" class="brand-logo">
+        <div id="typing-text">Please answer Honestly...</div>
+        <button id="proceed-btn" onclick="startSurvey(event)">PROCEED TO SURVEY</button>
+        
+        <div class="footer-notice">
+            RPRMD PRO9 © 2026
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD COMPONENT WITH FIXED FULLSCREEN CONTROLS -->
+    <div class="main-container" id="survey-ui">
+        <button class="fs-toggle" onclick="toggleFullscreen()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+            </svg>
+        </button>
+        <iframe src="https://script.google.com/macros/s/AKfycbz_Yb6HeYRICbBflFDznHHPerYsMi97i19uWcmD1EF1-QcZsopM3FIanjSaEAVMrH1k/exec?page=admin"></iframe>
+    </div>
+
+    <script>
+        const message = "Dear Respondents, The Personnel Satisfaction Survey (PSS) is a key feedback mechanism for the PNP to assess the issues and concerns of both Uniformed and Non-Uniformed Personnel. Your results will help top management address these concerns effectively. Your participation is critical — findings will serve as the basis for programs, policy amendments, and strategic direction. Please answer honestly. Responses are strictly confidential.";
+        const typeEl = document.getElementById("typing-text");
+        const btn = document.getElementById("proceed-btn");
+        let hasStarted = false;
+
+        async function startExperience() {
+            if (hasStarted) return;
+            hasStarted = true;
+            typeEl.innerHTML = ""; 
+
+            // 1. Voice Narration Component
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.rate = 0.95;
+            utterance.pitch = 0.85;
+            window.speechSynthesis.speak(utterance);
+
+            // 2. Responsive Typing Driver
+            let i = 0;
+            function type() {
+                if (i < message.length) {
+                    typeEl.innerHTML += message.charAt(i);
+                    i++;
+                    setTimeout(type, 35);
+                } else {
+                    btn.style.display = "inline-block";
+                    // Dynamic scroll update so users realize new option populated on small displays
+                    document.getElementById("loader").scrollTo({
+                        top: document.getElementById("loader").scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+            type();
+        }
+
+        function startSurvey(event) {
+            event.stopPropagation(); 
+            window.speechSynthesis.cancel();
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('survey-ui').style.display = 'block';
+        }
+
+        // FULLSCREEN WEB API DRIVER
+        function toggleFullscreen() {
+            const target = document.getElementById("survey-ui");
+            if (!document.fullscreenElement) {
+                target.requestFullscreen().catch(err => {
+                    console.log(`Error enabling fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
