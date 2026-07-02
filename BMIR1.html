@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="Video.gif">
+    <link rel="apple-touch-icon" href="Video.gif">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PRO9 | BMI MONITORING INFORMATION SYSTEM</title>
+    
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://server.arcgisonline.com">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            --tactical-cyan: #00f0ff;       
+            --matrix-green: #00ff41;        
+            --alert-crimson: #ff0055;       
+            --bg-deep-space: #01060f;       
+            --kinetic-snap: cubic-bezier(0.0, 0.95, 0.05, 1);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100%; width: 100%; 
+            overflow: hidden; background-color: var(--bg-deep-space); 
+            position: fixed; font-family: 'Segoe UI', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PERMANENT BACKGROUND VIDEO PIPELINE */
+        .video-matrix-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; overflow: hidden; background: var(--bg-deep-space);
+            transform: translate3d(0, 0, 0); backface-visibility: hidden;
+        }
+        .video-matrix-bg video {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: brightness(0.45) contrast(1.5) saturate(0.4) hue-rotate(190deg);
+            transform: scale(1.02);
+            will-change: transform, opacity;
+            transition: filter 0.5s var(--kinetic-snap);
+        }
+
+        /* CLEAR BG UPGRADE TARGET RULE */
+        body.matrix-active .video-matrix-bg video {
+            filter: brightness(0.95) contrast(1.1) saturate(1.0) hue-rotate(0deg) !important;
+        }
+
+        /* PERMANENT GEOSPATIAL RADAR LAYER */
+        #nav-map {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; mix-blend-mode: screen;
+            background: transparent !important;
+            will-change: transform, opacity;
+            transform: translate3d(0,0,0);
+            opacity: 0.9;
+            transition: filter 0.5s var(--kinetic-snap), opacity 0.5s var(--kinetic-snap);
+        }
+
+        .leaflet-container { background: transparent !important; }
+        .leaflet-tile-container img { 
+            will-change: transform, opacity; 
+            filter: brightness(0.35) contrast(1.6) saturate(0.1) hue-rotate(180deg) invert(0.05) !important;
+            transition: filter 0.5s var(--kinetic-snap);
+        }
+
+        /* CLEAR MAP TILE RE-TUNING ENGINE */
+        body.matrix-active .leaflet-tile-container img {
+            filter: brightness(0.95) contrast(1.1) saturate(1.0) hue-rotate(0deg) invert(0) !important;
+        }
+        body.matrix-active #nav-map {
+            mix-blend-mode: normal !important;
+            opacity: 1.0 !important;
+        }
+
+        /* HEADS-UP DISPLAY OVERLAY DEPLOYMENT FRAME */
+        #hud {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            background: radial-gradient(circle, rgba(1, 6, 15, 0.1) 20%, rgba(1, 6, 15, 0.96) 100%);
+            transition: opacity 0.4s var(--kinetic-snap), visibility 0.4s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .hud-frame-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 40px 60px; position: relative;
+            transform: scale(0.8); opacity: 0;
+            animation: tacticalTargetLock 0.5s var(--kinetic-snap) forwards;
+            pointer-events: auto;
+        }
+
+        .hud-frame-box::before, .hud-frame-box::after {
+            content: ''; position: absolute; width: 45px; height: 45px;
+            border-color: var(--tactical-cyan); border-style: solid;
+            transition: all 0.3s var(--kinetic-snap);
+            filter: drop-shadow(0 0 8px var(--tactical-cyan));
+        }
+        .hud-frame-box::before { top: 0; left: 0; border-width: 3px 0 0 3px; transform: translate(-5px, -5px); }
+        .hud-frame-box::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; transform: translate(5px, 5px); }
+
+        .entrance-logo {
+            width: 120px; height: auto;
+            filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.65));
+        }
+
+        .header-container {
+            text-align: center; color: #ffffff; text-transform: uppercase;
+            margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+
+        .header-container h1 { 
+            margin: 0; font-size: 1.55rem; letter-spacing: 6px; font-weight: 900; 
+            text-shadow: 0 0 15px var(--tactical-cyan);
+        }
+
+        .header-container .system-title {
+            font-size: 0.85rem; letter-spacing: 4px; color: var(--tactical-cyan); font-weight: 700; margin: 0;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+
+        .header-container .system-status {
+            font-size: 0.65rem; letter-spacing: 2px; color: var(--matrix-green); font-family: monospace; margin: 12px 0 0 0;
+            background: rgba(0, 255, 65, 0.06); padding: 3px 10px; border-radius: 2px; border: 1px solid rgba(0, 255, 65, 0.3);
+            text-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
+        }
+
+        /* HUD ACTION PROCEED BUTTON */
+        .tactical-proceed-btn {
+            background: rgba(1, 6, 15, 0.8);
+            border: 2px solid var(--tactical-cyan);
+            color: #ffffff; font-family: monospace; font-size: 0.8rem; font-weight: 900;
+            letter-spacing: 3px; padding: 14px 32px; border-radius: 4px;
+            margin-top: 30px; cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 240, 245, 0.25);
+            transition: all 0.25s var(--kinetic-snap);
+            text-transform: uppercase;
+        }
+        .tactical-proceed-btn:hover {
+            background: var(--tactical-cyan); color: var(--bg-deep-space);
+            box-shadow: 0 0 25px var(--tactical-cyan); transform: scale(1.03);
+        }
+
+        /* PERSISTENT FLOATING SIDEBAR TRIGGER */
+        .tactical-floating-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            z-index: 50; pointer-events: auto;
+            background: rgba(1, 6, 15, 0.9);
+            border: 2px solid var(--tactical-cyan);
+            color: #ffffff; font-family: monospace; font-size: 0.75rem; font-weight: 900;
+            letter-spacing: 2px; padding: 14px 22px; border-radius: 4px;
+            cursor: pointer; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.25s var(--kinetic-snap);
+            display: flex; align-items: center; gap: 12px;
+            text-transform: uppercase;
+        }
+        .tactical-floating-btn:hover {
+            background: var(--tactical-cyan); color: var(--bg-deep-space);
+            box-shadow: 0 0 25px var(--tactical-cyan); transform: translateY(-3px);
+        }
+        .tactical-floating-btn svg { fill: currentColor; transition: transform 0.3s; }
+        .tactical-floating-btn:hover svg { transform: rotate(90deg); }
+
+        /* FLEXIBLE TACTICAL SIDEBAR WITH TRANSLATION ENGINE */
+        .tactical-sidebar-panel {
+            position: fixed; top: 0; right: 0;
+            width: 450px; max-width: 100%; height: 100%;
+            z-index: 300; background: rgba(1, 6, 15, 0.96);
+            border-left: 2px solid var(--tactical-cyan);
+            box-shadow: -10px 0 30px rgba(1, 6, 15, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            transform: translate3d(100%, 0, 0); 
+            transition: transform 0.4s var(--kinetic-snap), width 0.3s var(--kinetic-snap);
+            will-change: transform, width;
+        }
+        .tactical-sidebar-panel.panel-active { transform: translate3d(0, 0, 0); }
+        
+        /* DESKTOP MATRIX MODE SWITCHED BY JS */
+        .tactical-sidebar-panel.desktop-mode { width: 1000px; }
+
+        .sidebar-panel-header {
+            padding: 15px 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 240, 255, 0.03); gap: 15px;
+        }
+        .sidebar-panel-title {
+            color: var(--tactical-cyan); font-family: monospace; font-size: 0.85rem;
+            font-weight: 900; letter-spacing: 2px; margin: 0; text-transform: uppercase;
+            display: flex; align-items: center; gap: 8px; white-space: nowrap;
+        }
+        
+        /* CONTROLS AREA WRAPPER */
+        .sidebar-header-controls {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* TACTICAL TOGGLE BUTTON GROUP */
+        .layout-toggle-btn {
+            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.4);
+            color: rgba(255, 255, 255, 0.7); font-family: monospace; font-size: 0.65rem;
+            font-weight: 700; padding: 5px 10px; cursor: pointer; border-radius: 2px;
+            transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .layout-toggle-btn.btn-selected {
+            background: var(--tactical-cyan); color: var(--bg-deep-space);
+            border-color: var(--tactical-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            font-weight: 900;
+        }
+
+        .sidebar-panel-close {
+            background: transparent; border: 1px solid var(--alert-crimson);
+            color: var(--alert-crimson); font-family: monospace; font-size: 0.7rem;
+            font-weight: 900; padding: 5px 12px; cursor: pointer; border-radius: 2px;
+            transition: all 0.2s; text-transform: uppercase;
+        }
+        .sidebar-panel-close:hover {
+            background: var(--alert-crimson); color: #ffffff; box-shadow: 0 0 10px var(--alert-crimson);
+        }
+        .sidebar-panel-body { flex: 1; width: 100%; background: #ffffff; overflow: hidden; }
+        .sidebar-panel-body iframe { width: 100%; height: 100%; border: none; }
+
+        /* RE-TUNED VECTOR MARKER STYLES */
+        .tactical-label {
+            background: rgba(1, 6, 15, 0.95) !important; border: 1px solid var(--tactical-cyan) !important;
+            color: #ffffff !important; font-weight: 700 !important; font-family: monospace !important;
+            font-size: 10px !important; padding: 3px 8px !important; border-radius: 2px !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .hq-label {
+            border-color: var(--alert-crimson) !important; color: var(--alert-crimson) !important; font-weight: 900 !important;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.5) !important;
+        }
+
+        @keyframes pulseMatrix { 0% { transform: scale(0.4); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+        .pulse-ring { border: 2px solid var(--matrix-green); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 4px var(--matrix-green)); }
+        .hq-pulse-ring { border: 2px solid var(--alert-crimson); border-radius: 50%; animation: pulseMatrix 1.1s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 6px var(--alert-crimson)); }
+        @keyframes tacticalTargetLock { to { transform: scale(1); opacity: 1; } }
+
+        /* CORE ADMIN FRAME */
+        #secure-frame {
+            position: absolute; width: 100%; height: 100%; border: none; 
+            z-index: 5; opacity: 0; visibility: hidden; 
+            transition: opacity 0.4s var(--kinetic-snap);
+            background: transparent;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="video-matrix-bg">
+        <video autoplay loop muted playsinline poster="LOGO.png">
+            <source src="VIDM.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="nav-map"></div>
+
+    <iframe id="secure-frame" 
+            src="https://script.google.com/macros/s/AKfycbyaUfLGFpUzIoUGil6y2y0V0OASpnMw3LLh1jVTrNZzwWOSfcZ_UIvuqgnYOAcLxx4U/exec?p=admin" 
+            allow="geolocation; camera; microphone; fullscreen; autoplay; display-capture;">
+    </iframe>
+
+    <button class="tactical-floating-btn" onclick="toggleTacticalSidebar(true)">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+    </button>
+
+    <div class="tactical-sidebar-panel" id="sidebarPanel">
+        <div class="sidebar-panel-header">
+            <h3 class="sidebar-panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" style="fill: var(--tactical-cyan);">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                Terminal
+            </h3>
+            
+            <div class="sidebar-header-controls">
+                <button id="btnSideView" class="layout-toggle-btn btn-selected" onclick="adjustFormLayout('side')">Side View</button>
+                <button id="btnDesktopView" class="layout-toggle-btn" onclick="adjustFormLayout('desktop')">Desktop Look</button>
+                <button class="sidebar-panel-close" onclick="toggleTacticalSidebar(false)">Close</button>
+            </div>
+        </div>
+        <div class="sidebar-panel-body">
+            <iframe src="https://script.google.com/macros/s/AKfycbyaUfLGFpUzIoUGil6y2y0V0OASpnMw3LLh1jVTrNZzwWOSfcZ_UIvuqgnYOAcLxx4U/exec"></iframe>
+        </div>
+    </div>
+
+    <div id="hud">
+        <div class="hud-frame-box">
+            <img src="pro9 logo.png" alt="PRO9 Logo" class="entrance-logo" width="110" height="110">
+            <div class="header-container">
+                <h1>POLICE REGIONAL OFFICE 9</h1>
+                <p class="system-title">BODY MASS INDEX MONITORING SYSTEM</p>
+                <p class="system-status">// SYSTEM CONFIGURED: AWAITING OPERATOR DISPATCH...</p>
+            </div>
+            <button class="tactical-proceed-btn" onclick="triggerOverdriveLaunch()">Proceed to System Matrix</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const regionalNodes = [
+          { n: "PRO9 HQ (CAMP ABENDAN)", p: [6.9576, 122.1444], isHQ: true },
+          { n: "ZAMBOANGA CITY POLICE OFFICE", p: [6.9214, 122.0790], isHQ: false },
+          { n: "SULU PROVINCIAL HQ", p: [6.0000, 121.0000], isHQ: false },
+          { n: "ISABELA CITY DIVISION", p: [6.7042, 121.9711], isHQ: false },
+          { n: "ZAMBOANGA SIBUGAY PROVINCIAL HQ", p: [7.7811, 122.7244], isHQ: false },
+          { n: "ZAMBOANGA DEL SUR PROVINCIAL HQ", p: [7.8283, 123.4344], isHQ: false },
+          { n: "ZAMBOANGA DEL NORTE PROVINCIAL HQ", p: [8.2003, 123.0012], isHQ: false }
+        ];
+
+        const map = L.map('nav-map', { 
+            zoomControl: false, 
+            attributionControl: false, 
+            zoomAnimation: true,
+            markerZoomAnimation: true,
+            preferCanvas: true 
+        }).setView([7.4000, 122.3000], 7);
+        
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            updateWhenIdle: false,
+            keepBuffer: 3
+        }).addTo(map);
+
+        regionalNodes.forEach(node => {
+            const markerColor = node.isHQ ? '#ff0055' : '#00f0ff';
+            const pulseClassName = node.isHQ ? 'hq-pulse-ring' : 'pulse-ring';
+            const tooltipClassName = node.isHQ ? 'tactical-label hq-label' : 'tactical-label';
+
+            L.circleMarker(node.p, { radius: node.isHQ ? 7 : 5, color: '#fff', fillColor: markerColor, fillOpacity: 1, weight: 2 }).addTo(map)
+             .bindTooltip(node.n, { permanent: true, direction: 'right', offset: [14, 0], className: tooltipClassName });
+            
+            L.circleMarker(node.p, { radius: node.isHQ ? 24 : 16, color: markerColor, weight: 1.5, fillOpacity: 0, className: pulseClassName }).addTo(map);
+        });
+
+        setTimeout(() => {
+            map.flyTo([6.9576, 122.1444], 14, { duration: 0.42, easeLinearity: 0.02 });
+        }, 100);
+
+        // UPGRADED LAUNCH SEQUENCE PROTOCOL
+        function triggerOverdriveLaunch() {
+            const frame = document.getElementById('secure-frame');
+            const hud = document.getElementById('hud');
+            
+            // Inject class token to trigger instant native clear filtration filters across background structures
+            document.body.classList.add('matrix-active');
+
+            map.flyTo([7.4000, 122.3000], 8, { duration: 0.45, easeLinearity: 0.05 });
+            
+            setTimeout(() => {
+                frame.style.visibility = "visible";
+                frame.style.opacity = "0.92"; 
+                hud.style.opacity = "0";
+                hud.style.visibility = "hidden";
+            }, 350);
+        }
+
+        function toggleTacticalSidebar(show) {
+            const panel = document.getElementById('sidebarPanel');
+            if (show) {
+                panel.classList.add('panel-active');
+            } else {
+                panel.classList.remove('panel-active');
+            }
+        }
+
+        function adjustFormLayout(mode) {
+            const panel = document.getElementById('sidebarPanel');
+            const btnSide = document.getElementById('btnSideView');
+            const btnDesktop = document.getElementById('btnDesktopView');
+
+            if (mode === 'desktop') {
+                panel.classList.add('desktop-mode');
+                btnDesktop.classList.add('btn-selected');
+                btnSide.classList.remove('btn-selected');
+            } else {
+                panel.classList.remove('desktop-mode');
+                btnSide.classList.add('btn-selected');
+                btnDesktop.classList.remove('btn-selected');
+            }
+        }
+
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) {
+                return false;
+            }
+        };
+
+        let idleTime = 0;
+        const resetIdle = () => idleTime = 0;
+        ['mousemove', 'keypress', 'touchstart'].forEach(evt => window.addEventListener(evt, resetIdle));
+
+        setInterval(() => {
+            idleTime++;
+            if (idleTime >= 30) window.location.reload();
+        }, 60000);
+    </script>
+</body>
+</html>
