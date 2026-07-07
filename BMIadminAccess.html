@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI ADMIN ENTRY VALIDATION | SYSTEM ACCESS</title>
+    
+    <!-- Standard Browser Icons -->
+    <link rel="icon" type="image/png" href="Video.gif">
+    <link rel="apple-touch-icon" href="Video.gif">
+    
+    <!-- Link Sharing / Rich Preview Meta Tags (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="BMI Admin Entry Validation Form">
+    <meta property="og:description" content="Secure administrative gateway for BMI entry verification and system access control.">
+    <!-- Ensure 'Video.gif' is replaced with your full absolute URL when deployed live -->
+    <meta property="og:image" content="Video.gif"> 
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter / Chat App Preview Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BMI Admin Entry Validation Form">
+    <meta name="twitter:description" content="Secure administrative gateway for BMI entry verification and system access control.">
+    <meta name="twitter:image" content="Video.gif">
+
+    <!-- Viewport Optimization for Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reset margins, padding, and eliminate scrollbars */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #0b0f19; /* Deep tactical background */
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Master layout container */
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Modern Glassmorphism System Header */
+        .system-header {
+            height: 70px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Glowing Animated System Logo */
+        .system-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.5));
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Tactical Status Indicator */
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-text {
+            color: #10b981;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Seamless Iframe Container spanning remaining height */
+        .iframe-container {
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            background: #ffffff;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Ambient Pulsing Glow Animation for Logo */
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(0, 102, 255, 0.4)); }
+            50% { filter: drop-shadow(0 0 14px rgba(0, 102, 255, 0.8)); }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            .system-header { padding: 0 16px; }
+            .brand-title { font-size: 13px; letter-spacing: 0.8px; }
+            .brand-subtitle { font-size: 9px; }
+            .system-status { padding: 4px 10px; }
+            .status-text { font-size: 9px; }
+            .system-logo { width: 38px; height: 38px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- SYSTEM HEADER -->
+        <header class="system-header">
+            <div class="header-brand">
+                <!-- System Logo Graphic Container -->
+                <img src="Video.gif" alt="System Logo" class="system-logo">
+                <div class="brand-text">
+                    <span class="brand-title">BMI Admin Entry Validation</span>
+                    <span class="brand-subtitle">System Access Gateway</span>
+                </div>
+            </div>
+            
+            <!-- Live Operational Status Indicator -->
+            <div class="system-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Secure Node</span>
+            </div>
+        </header>
+
+        <!-- EDGE-TO-EDGE WEB INTERFACE CONTAINER -->
+        <main class="iframe-container">
+            <iframe 
+                src="https://script.google.com/macros/s/AKfycbyDLvv8FXSjwbxDvWaK6qZE8zp6_we6Zm-7fC6ixYz0tRIZYIgDIEp4IGahDnGksCNFNw/exec" 
+                allowfullscreen>
+            </iframe>
+        </main>
+    </div>
+
+</body>
+</html>
